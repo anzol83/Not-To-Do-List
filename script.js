@@ -49,3 +49,35 @@ const generateRandomId = () => {
 
   return id
 }
+
+// STEPS TO DISPLAY THE TASK LIST
+// STEP 1: Select the DOM element [tbody] in which you want to add task list
+const taskListElement = document.getElementById("taskListElement")
+
+// Function to display all task list
+const displayTaskList = () => {
+
+  let taskListItemRows = ''
+  // STEP 2: Map through the task list of type entry
+  // So, first filter the taskList ot get only entry type task list
+  const entryTypetask = taskList.filter(task => task.type === "entry")
+
+  entryTypetask.map((task, index) => {
+    taskListItemRows += `<tr>
+      <th>${index+1}</th>
+      <td>${task.taskName}</td>
+      <td>${task.taskTime}hrs</td>
+      <td class="text-end">
+        <button class="btn btn-danger btn-sm">
+          <i class="fa-trash fa-solid"></i>
+        </button>
+
+        <button class="btn btn-success btn-sm" onclick="moveTaskToUnwantedTaskList('${task.id}')">
+          <i class="fa-arrow-right-long fa-solid fa-sharp"></i>
+        </button>
+      </td>
+    </tr>` 
+  })
+
+  taskListElement.innerHTML = taskListItemRows
+}
