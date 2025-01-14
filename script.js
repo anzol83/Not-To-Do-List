@@ -81,3 +81,62 @@ const displayTaskList = () => {
 
   taskListElement.innerHTML = taskListItemRows
 }
+
+// DOM to display unwanted task list
+const unwantedTaskListElement = document.getElementById("unwantedTaskListElement")
+
+// Function to display all task list
+const displayUnwantedTaskList = () => {
+
+  let taskListItemRows = ''
+  // STEP 2: Map through the task list of type entry
+  // So, first filter the taskList ot get only unwated type task list
+  const unwatedTypeTask = taskList.filter(task => task.type === "Unwanted")
+
+  unwatedTypeTask.map((task, index) => {
+    taskListItemRows += `<tr>
+      <th>${index+1}</th>
+      <td>${task.taskName}</td>
+      <td>${task.taskTime}hrs</td>
+      <td class="text-end">
+        <button class="btn btn-danger btn-sm">
+          <i class="fa-trash fa-solid"></i>
+        </button>
+
+        <button class="btn btn-success btn-sm" onclick="moveTaskToUnwantedTaskList(${task})">
+          <i class="fa-arrow-right-long fa-solid fa-sharp"></i>
+        </button>
+      </td>
+    </tr>` 
+  })
+
+  unwantedTaskListElement.innerHTML = taskListItemRows
+}
+
+// Function to move entry task to unwanted task list
+const moveTaskToUnwantedTaskList = (unwantedTaskId) => {
+  const updatedTaskList = taskList.map((task) => {
+    if(task.id === unwantedTaskId){
+      task.type = "Unwanted"
+    }
+
+    return task
+  })
+
+  taskList = updatedTaskList
+  // update local storage as well to be in sync
+  updateLocalStorage()
+  //call function to display entry task
+  displayTaskList()
+  //call the function to display unwanted task
+  displayUnwantedTaskList()
+}
+
+// Update local storage
+const updateLocalStorage = () => {
+  localStorage.setItem("taskList", JSON.stringify(taskList))
+}
+// CALL THE displayTaskList to display task list on load for the first time
+displayTaskList()
+// CALL THE displayTaskList to display unwanted task list on load for the first time
+displayUnwantedTaskList()
