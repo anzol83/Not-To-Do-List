@@ -35,7 +35,7 @@ const handleOnSubmit = (form) => {
   form.reset()
 }
 
-// Function to generate random unique id
+// Function to genrate random unique id
 const generateRandomId = () => {
   const idString = "qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM1234567890"
 
