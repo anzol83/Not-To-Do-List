@@ -27,7 +27,7 @@ const handleOnSubmit = (form) => {
   console.log("taskList", taskList);
   // Call the display entry task list function
   displayTaskList()
-  
+
   // Save taskList to the local storage for persistent data
   localStorage.setItem("taskList", JSON.stringify(taskList))
 
@@ -68,7 +68,7 @@ const displayTaskList = () => {
       <td>${task.taskName}</td>
       <td>${task.taskTime}hrs</td>
       <td class="text-end">
-        <button class="btn btn-danger btn-sm">
+        <button class="btn btn-danger btn-sm" onclick="handleOnDelete('${task.id}')">
           <i class="fa-trash fa-solid"></i>
         </button>
 
@@ -99,18 +99,22 @@ const displayUnwantedTaskList = () => {
       <td>${task.taskName}</td>
       <td>${task.taskTime}hrs</td>
       <td class="text-end">
-        <button class="btn btn-danger btn-sm">
+        <button class="btn btn-danger btn-sm" onclick="handleOnDelete('${task.id}')">
           <i class="fa-trash fa-solid"></i>
         </button>
 
-        <button class="btn btn-success btn-sm" onclick="moveTaskToUnwantedTaskList(${task})">
-          <i class="fa-arrow-right-long fa-solid fa-sharp"></i>
+        <button class="btn btn-warning btn-sm" onclick="moveTaskToEntryTaskList('${task.id}')">
+          <i class="fa-arrow-left-long fa-solid fa-sharp"></i>
         </button>
       </td>
     </tr>` 
   })
 
   unwantedTaskListElement.innerHTML = taskListItemRows
+
+  // call the function to calculate and display time
+  calculateTotalTaskTime()
+  calculateWastedTaskTime()
 }
 
 // Function to move entry task to unwanted task list
@@ -130,6 +134,41 @@ const moveTaskToUnwantedTaskList = (unwantedTaskId) => {
   displayTaskList()
   //call the function to display unwanted task
   displayUnwantedTaskList()
+}
+
+// Function to move unwanted task list to entry task
+const moveTaskToEntryTaskList = (entryTaskId) => {
+  const updatedTaskList = taskList.map((task) => {
+    if(task.id === entryTaskId){
+      task.type = "entry"
+    }
+
+    return task
+  })
+
+  taskList = updatedTaskList
+  // update local storage as well to be in sync
+  updateLocalStorage()
+  //call function to display entry task
+  displayTaskList()
+  //call the function to display unwanted task
+  displayUnwantedTaskList()
+}
+
+// Function to delete the task
+const handleOnDelete = (taskId) => {
+  if(window.confirm("Are you sure you want to delete the task?")){
+    const updatedTaskList = taskList.filter(task => task.id !== taskId)
+
+    taskList = updatedTaskList
+
+    //update local storage
+    updateLocalStorage()
+    //call function to display entry task
+    displayTaskList()
+    //call the function to display unwanted task
+    displayUnwantedTaskList()
+  }
 }
 
 // Update local storage
