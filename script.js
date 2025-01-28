@@ -50,6 +50,36 @@ const generateRandomId = () => {
   return id
 }
 
+
+// Logic for displaying time
+const totalTimeInDayElement = document.getElementById("totalTimeInDayElement")
+const totalTimeElement = document.getElementById("totalTimeElement")
+const totalWastedTimeElement = document.getElementById("totalWastedTimeElement")
+
+// Display times
+totalTimeInDayElement.innerText = "24hrs"
+
+// here we will calculate total time for entry and unwanted [for all task]
+const calculateTotalTaskTime = () => {
+  const totalTaskTime = taskList.reduce((acc, curr)=> {
+    return acc + parseInt(curr.taskTime)
+  }, 0)
+
+  // display totalTaskTime
+  totalTimeElement.innerText = `${totalTaskTime}hrs`
+}
+
+// function to caluclate wasted time
+const calculateWastedTaskTime = () => {
+  const unwantedTask = taskList.filter(task => task.type === "Unwanted")
+
+  const totalWastedTime = unwantedTask.reduce((acc, curr)=> {
+    return acc + parseInt(curr.taskTime)
+  }, 0)
+
+  totalWastedTimeElement.innerText = `${totalWastedTime}hrs`
+}
+
 // STEPS TO DISPLAY THE TASK LIST
 // STEP 1: Select the DOM element [tbody] in which you want to add task list
 const taskListElement = document.getElementById("taskListElement")
@@ -80,6 +110,10 @@ const displayTaskList = () => {
   })
 
   taskListElement.innerHTML = taskListItemRows
+
+  // call the function to calculate and display time
+  calculateTotalTaskTime()
+  calculateWastedTaskTime()
 }
 
 // DOM to display unwanted task list
